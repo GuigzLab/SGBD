@@ -39,6 +39,11 @@ public class DiskManager {
         //correspondant à la page nouvellement rajoutée !
         //À vous de comprendre comment remplir ce PageId !
 
+
+        //Il faut: le nombre de pages du fichier, multiplier par pagesize
+        //Ecrire les octets a la suite
+        //avoir l'id de la page et remplacer le 1 par l'id
+
         //Pour éviter les erreurs /!\ à modifier
         return new PageID(fileIdx, 1);
     }
