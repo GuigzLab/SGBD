@@ -26,7 +26,7 @@ public class DiskManager {
 
 
         //Votre SGBD stockera chaque relation dans un fichier (→ fichier « normal », au sens OS).
-        //Ces fichiers s’appelleront Data_x.rf, avec x entier >=0 l’identifiant du fichier : Data_ .rf ₀ , Data_ .rf ₁
+        //Ces fichiers s’appelleront Data_x.rf, avec x entier >=0 l’identifiant du fichier : Data_ .rf , Data_ .rf
         //etc. (rf veut dire « relation file » ; c’est une extension que nous inventons pour ce TP : ) )
         //Tous ces fichiers seront placés dans votre sous-répertoire DB.
         //Pour lire et écrire dans ces fichiers, vous allez utiliser des méthodes de lecture/écriture dans les

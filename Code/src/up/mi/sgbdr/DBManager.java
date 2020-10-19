@@ -48,6 +48,7 @@ public class DBManager {
                     colTypes.add(col[1]);
                 }
                 CreateRelation(relName, colNumber, colNames, colTypes);
+                DBInfo.getInstance().count++;
                 DBInfo.getInstance().displayList();
 
             }
