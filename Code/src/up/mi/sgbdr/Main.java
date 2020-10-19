@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
 
         //Initialiser les variables de DBParams
-        DBParams.DBPath = "../../DB/";
+        DBParams.DBPath = "DB/";
         DBParams.pageSize = 4096;
 
         DBManager.getInstance().Init();

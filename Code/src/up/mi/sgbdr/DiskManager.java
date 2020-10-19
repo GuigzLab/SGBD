@@ -1,11 +1,13 @@
 package up.mi.sgbdr;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class DiskManager {
 
     private static DiskManager INSTANCE;
-    private String info = "Initial info class";
+    private String info = "Disk Manager";
 
     private DiskManager() {
     }
@@ -23,13 +25,28 @@ public class DiskManager {
         //vide.
 
 
-
         //Votre SGBD stockera chaque relation dans un fichier (→ fichier « normal », au sens OS).
         //Ces fichiers s’appelleront Data_x.rf, avec x entier >=0 l’identifiant du fichier : Data_ .rf ₀ , Data_ .rf ₁
         //etc. (rf veut dire « relation file » ; c’est une extension que nous inventons pour ce TP : ) )
         //Tous ces fichiers seront placés dans votre sous-répertoire DB.
         //Pour lire et écrire dans ces fichiers, vous allez utiliser des méthodes de lecture/écriture dans les
         //fichiers binaires.
+
+
+        //Crée un fichier dans le sous dossier DB
+        try {
+            File newFile = new File(DBParams.DBPath +"Data_" + fileIdx + ".rf");
+            if (newFile.createNewFile()) {
+                System.out.println("File created: " + newFile.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+
     }
 
     public PageID AddPage(int fileIdx) {
@@ -52,6 +69,9 @@ public class DiskManager {
         //Cette méthode doit remplir l’argument buff avec le contenu disque de la page identifiée par
         //l’argument pageId.
         //Attention : c’est l’appelant de cette méthode qui crée et fournit le buffer à remplir!
+
+        //RandomAccessFile
+        //http://imss-www.upmf-grenoble.fr/prevert/Prog/Java/Flux/RandomAccessFile.html
     }
 
     public void WritePage(PageID pageId, ByteBuffer buff) {
