@@ -1,7 +1,8 @@
 package up.mi.sgbdr;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 
 public class DiskManager {
@@ -20,63 +21,131 @@ public class DiskManager {
         return INSTANCE;
     }
 
+    /**
+     * Crée dans le sous dossier DBParams.DBPath un fichier Data_fileIdx.rf vide
+     *
+     * @param fileIdx - Entier >= 0 qui est l'identifiant du fichier
+     */
+
     public void CreateFile(int fileIdx) {
-        //Cette méthode crée (dans le sous-dossier DB) un fichier Data_fileIdx.rf initialement
-        //vide.
 
-
-        //Votre SGBD stockera chaque relation dans un fichier (→ fichier « normal », au sens OS).
-        //Ces fichiers s’appelleront Data_x.rf, avec x entier >=0 l’identifiant du fichier : Data_ .rf , Data_ .rf
-        //etc. (rf veut dire « relation file » ; c’est une extension que nous inventons pour ce TP : ) )
-        //Tous ces fichiers seront placés dans votre sous-répertoire DB.
-        //Pour lire et écrire dans ces fichiers, vous allez utiliser des méthodes de lecture/écriture dans les
-        //fichiers binaires.
-
-
-        //Crée un fichier dans le sous dossier DB
         try {
-            File newFile = new File(DBParams.DBPath +"Data_" + fileIdx + ".rf");
-            if (newFile.createNewFile()) {
-                System.out.println("File created: " + newFile.getName());
-            } else {
-                System.out.println("File already exists.");
-            }
+            RandomAccessFile r = new RandomAccessFile(DBParams.DBPath + "Data_" + fileIdx + ".rf", "rw");
+            r.close();
         } catch (IOException e) {
-            System.out.println("An error occurred.");
             e.printStackTrace();
         }
 
 
     }
 
+    /**
+     * Rajoute une page au fichier spécifié (rajoute DBParams.pageSize octets à la fin du fichier)
+     *
+     * @param fileIdx - Identifiant du fichier
+     * @return PageID
+     */
+
     public PageID AddPage(int fileIdx) {
 
-        //Cette méthode rajoute une page au fichier spécifié par fileIdx (c’est à dire, elle rajoute
-        //pageSize octets, avec une valeur quelconque, à la fin du fichier) et retourne un PageId
-        //correspondant à la page nouvellement rajoutée !
-        //À vous de comprendre comment remplir ce PageId !
+        //FIXME
+        // - byte[] buff to ByteBuffer buff
+
+//        ByteBuffer byteBuffer = ByteBuffer.allocate(DBParams.pageSize);
+        byte[] byteBuffer = new byte[DBParams.pageSize];
+
+        int pageId = 0;
+        try {
+            RandomAccessFile file = new RandomAccessFile(DBParams.DBPath + "Data_" + fileIdx + ".rf", "rw");
+            file.seek(file.length());
 
 
-        //Il faut: le nombre de pages du fichier, multiplier par pagesize
-        //Ecrire les octets a la suite
-        //avoir l'id de la page et remplacer le 1 par l'id
+            for (int i = 0; i < DBParams.pageSize; i++) {
+//                file.writeByte(byteBuffer.get(i));
+                file.writeByte(byteBuffer[i]);
+            }
 
-        //Pour éviter les erreurs /!\ à modifier
-        return new PageID(fileIdx, 1);
+            pageId = (int) (file.length() / 4096 - 1);
+            file.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new PageID(fileIdx, pageId);
     }
 
-    public void ReadPage(PageID pageId, ByteBuffer buff) {
-        //Cette méthode doit remplir l’argument buff avec le contenu disque de la page identifiée par
-        //l’argument pageId.
-        //Attention : c’est l’appelant de cette méthode qui crée et fournit le buffer à remplir!
+    /**
+     * Remplie l'argument buff avec le contenu du disque de la page identifiée par l'argument pageId
+     *
+     * @param pageId - Identifiant de la page
+     * @param buff   - Buffer
+     */
 
-        //RandomAccessFile
-        //http://imss-www.upmf-grenoble.fr/prevert/Prog/Java/Flux/RandomAccessFile.html
+    public void ReadPage(PageID pageId, byte[] buff) {
+
+        //FIXME
+        // - byte[] buff to ByteBuffer buff
+
+        String path = DBParams.DBPath + "Data_" + pageId.getFileIdx() + ".rf";
+        RandomAccessFile file;
+
+        try {
+            file = new RandomAccessFile(path, "r");
+            long pos = pageId.getPageIdx() * DBParams.pageSize;
+            byte[] array = new byte[DBParams.pageSize];
+
+            file.seek(pos);
+
+            for (int i = 0; i < DBParams.pageSize; i++) {
+//                array[i] = file.readByte();
+                buff[i] = file.readByte();
+                pos++;
+                file.seek(pos);
+            }
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+//            buff.wrap(array);
+
     }
 
-    public void WritePage(PageID pageId, ByteBuffer buff) {
-        //écrit le contenu de l’argument buff dans le fichier et à la
-        //position indiqués par l’argument pageId.
+    /**
+     * Ecrit le contenu de l'argument buff dans le fichier et dans la page indiquée par pageId
+     *
+     * @param pageId - Identifiant de la page
+     * @param buff   - Buffer
+     */
+
+    public void WritePage(PageID pageId, byte[] buff) {
+
+        //FIXME
+        // - byte[] buff to ByteBuffer buff
+
+        //TODO Exception si le buffer est plus gros que la taille d'une page
+
+        String path = DBParams.DBPath + "Data_" + pageId.getFileIdx() + ".rf";
+        RandomAccessFile file;
+
+        try {
+            file = new RandomAccessFile(path, "rw");
+            int pos = DBParams.pageSize * (pageId.getPageIdx());
+
+            if (pageId.getPageIdx() != 0) {
+                file.seek(pos);
+            }
+            file.write(buff, 0, DBParams.pageSize);
+
+            file.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }

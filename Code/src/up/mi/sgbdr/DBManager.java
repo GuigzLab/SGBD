@@ -56,6 +56,7 @@ public class DBManager {
             case "DBPARAMS" ->  {
                 System.out.println("Path: " + DBParams.DBPath);
                 System.out.println("Page Size: " + DBParams.pageSize);
+                System.out.println("Rel count: " + DBInfo.getInstance().count);
             }
 
             default -> System.out.println("Mauvaise commande");
