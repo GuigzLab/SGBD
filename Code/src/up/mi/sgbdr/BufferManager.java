@@ -35,24 +35,25 @@ public class BufferManager {
                 Attention aussi : cette méthode devra s’occuper du remplacement du contenu d’une frame si
         besoin (donc politique de remplacement).
         */
-        // TODO - Si le BM est plein, politique de remplacement (LRU).
-        // TODO - Pincount et Dirty.
 
-        //On crée un byteBuffer vide
+        // TODO - Ajouter une variable buffer aux frames à la place de ReadPage ?;
+
+
+        // On crée un byteBuffer vide
         byte[] byteBuffer = new byte[DBParams.pageSize];
 
+        // Copie des frames pour trier la collection et en sortir la date la plus lointaine
         ArrayList<Frame> copy = new ArrayList<>(this.frames);
+        // Trie de la collection
         Collections.sort(copy);
+        // Sort le premier element, le plus petit (donc la plus petite date = la plus vieille)
         LocalDateTime LRU = copy.get(0).getUnpinned();
-        System.out.println("LRU : " + LRU);
-
 
         // On parcourt toutes les frames
         for (Frame frame : this.frames) {
 
             // Si le BM contient déjà la page, récupérer le buffer courant
             if (frame.getPageID() == pageID) {
-                DiskManager.getInstance().ReadPage(pageID, byteBuffer);
                 frame.setPinCount(frame.getPinCount() + 1);
                 break;
             }
@@ -61,22 +62,26 @@ public class BufferManager {
             if (frame.getPageID() == null) {
                 frame.setPageID(pageID);
                 frame.setPinCount(frame.getPinCount() + 1);
-                DiskManager.getInstance().ReadPage(pageID, byteBuffer);
                 break;
             }
 
-            // LRU
+            // Si le BM est plein, politique de remplacement (LRU)
             if (frame.getUnpinned() == LRU && frame.getPinCount() < 1) {
                 // TODO - Ecrire si dirty vaut 1
                 frame.setPinCount(1);
                 frame.setDirty(0);
                 frame.setUnpinned(LocalDateTime.now().plusYears(1));
                 frame.setPageID(pageID);
+
+                break;
             }
         }
 
+        // remplie le byteBuffer avec le contenu de la page
+        DiskManager.getInstance().ReadPage(pageID, byteBuffer);
 
-
+        // Aide visuelle
+        System.out.println("LRU : " + LRU);
         for (Frame frame : this.frames) {
             System.out.println("FRAME");
             System.out.println("PageID : " + frame.getPageID());
@@ -85,8 +90,6 @@ public class BufferManager {
             System.out.println("Unpinned : " + frame.getUnpinned());
             System.out.println("----------");
         }
-
-
 
         return byteBuffer;
     }
