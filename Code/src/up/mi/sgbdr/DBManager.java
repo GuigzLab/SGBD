@@ -24,6 +24,7 @@ public class DBManager {
 
     public void Finish() {
         DBInfo.getInstance().Finish();
+        BufferManager.getInstance().FlushAll();
     }
 
     public void CreateRelation(String name, int number, ArrayList<String> colNames, ArrayList<String> colTypes) {
