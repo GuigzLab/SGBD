@@ -2,8 +2,6 @@ package up.mi.sgbdr;
 
 public class BufferManager {
 
-    public static int frameCount = 2;
-
     private static BufferManager INSTANCE;
     private String info = "Disk Manager";
 

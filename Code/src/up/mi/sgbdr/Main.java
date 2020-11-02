@@ -9,6 +9,7 @@ public class Main {
         //Initialiser les variables de DBParams
         DBParams.DBPath = "DB/";
         DBParams.pageSize = 4096;
+        DBParams.frameCount = 2;
 
         DBManager.getInstance().Init();
 
