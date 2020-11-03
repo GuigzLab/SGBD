@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 
 public class Frame implements Comparable<Frame>{
     private PageID pageID;
-    public byte[] buffer = new byte[DBParams.pageSize];
-    private int pinCount = 0;
-    private int dirty = 0;
-    private LocalDateTime unpinned = LocalDateTime.now().plusYears(1);
+    public byte[] buffer;
+    private int pinCount;
+    private boolean dirty;
+    private LocalDateTime unpinned;
 
-//    public Frame (PageID pageID) {
-//        this.pageID = pageID;
-//    }
+    public Frame () {
+        this.resetFrame();
+    }
 
     public PageID getPageID() {
         return pageID;
@@ -21,11 +21,11 @@ public class Frame implements Comparable<Frame>{
         this.pageID = pageID;
     }
 
-    public int getDirty() {
+    public boolean isDirty() {
         return dirty;
     }
 
-    public void setDirty(int dirty) {
+    public void setDirty(boolean dirty) {
         this.dirty = dirty;
     }
 
@@ -45,16 +45,20 @@ public class Frame implements Comparable<Frame>{
         this.unpinned = unpinned;
     }
 
-//    public byte[] getBuffer() {
-//        return buffer;
-//    }
-//
-//    public void setBuffer(byte[] buffer) {
-//        this.buffer = buffer;
-//    }
-
     @Override
     public int compareTo(Frame o) {
         return getUnpinned().compareTo(o.getUnpinned());
+    }
+
+    public void resetFrame () {
+        this.pageID = null;
+        this.buffer = new byte[DBParams.pageSize];
+        this.pinCount = 0;
+        this.dirty = false;
+        this.unpinned = LocalDateTime.now().plusYears(1);
+    }
+
+    public void incrementPinCount() {
+        this.pinCount++;
     }
 }

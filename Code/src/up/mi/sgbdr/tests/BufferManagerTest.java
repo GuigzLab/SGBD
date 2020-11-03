@@ -17,25 +17,39 @@ public class BufferManagerTest {
         DiskManager DM = DiskManager.getInstance();
         BufferManager BM = BufferManager.getInstance();
 
+        BM.DisplayFrames();
+
         PageID page = new PageID(1,0);
         PageID page2 = new PageID(1,1);
         PageID page3 = new PageID(1,2);
+
         System.out.println("GETPAGE 1 --------------");
         byte[] byteBuffer = BM.GetPage(page);
+
+        BM.DisplayFrames();
+
         System.out.println("GETPAGE 2 --------------");
         byte[] byteBuffer2 = BM.GetPage(page2);
 
+        BM.DisplayFrames();
+
         System.out.println("FREEPAGE 2 --------------");
-        BM.FreePage(page2, 1);
+        BM.FreePage(page2, true);
 
         Thread.sleep(4000);
 
         System.out.println("FREEPAGE 1 --------------");
-        BM.FreePage(page, 1);
+        BM.FreePage(page, true);
 
+        BM.DisplayFrames();
 
         System.out.println("GETPAGE 3 --------------");
         byteBuffer = BM.GetPage(page3);
+
+        BM.DisplayFrames();
+        System.out.println("-------------- FLUSH --------------");
+        BM.FlushAll();
+        BM.DisplayFrames();
 
     }
 }
