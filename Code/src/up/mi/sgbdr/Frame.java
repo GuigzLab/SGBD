@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class Frame implements Comparable<Frame>{
     private PageID pageID;
+    public byte[] buffer = new byte[DBParams.pageSize];
     private int pinCount = 0;
     private int dirty = 0;
     private LocalDateTime unpinned = LocalDateTime.now().plusYears(1);
@@ -43,6 +44,14 @@ public class Frame implements Comparable<Frame>{
     public void setUnpinned(LocalDateTime unpinned) {
         this.unpinned = unpinned;
     }
+
+//    public byte[] getBuffer() {
+//        return buffer;
+//    }
+//
+//    public void setBuffer(byte[] buffer) {
+//        this.buffer = buffer;
+//    }
 
     @Override
     public int compareTo(Frame o) {

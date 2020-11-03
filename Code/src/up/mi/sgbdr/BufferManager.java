@@ -36,11 +36,8 @@ public class BufferManager {
         besoin (donc politique de remplacement).
         */
 
-        // TODO - Ajouter une variable buffer aux frames à la place de ReadPage ?;
-
-
-        // On crée un byteBuffer vide
-        byte[] byteBuffer = new byte[DBParams.pageSize];
+        // TODO - Ajouter une variable buffer aux frames à la place de ReadPage
+        // TODO - Changer le système d'accès avec le buffer ci-dessus
 
         // Copie des frames pour trier la collection et en sortir la date la plus lointaine
         ArrayList<Frame> copy = new ArrayList<>(this.frames);
@@ -55,43 +52,38 @@ public class BufferManager {
             // Si le BM contient déjà la page, récupérer le buffer courant
             if (frame.getPageID() == pageID) {
                 frame.setPinCount(frame.getPinCount() + 1);
-                break;
+                return frame.buffer;
             }
 
             // Si le BM ne contient pas déjà la page, faire simplement un DiskManager.getInstance().ReadPage(pageID)
             if (frame.getPageID() == null) {
                 frame.setPageID(pageID);
                 frame.setPinCount(frame.getPinCount() + 1);
-                break;
+                DiskManager.getInstance().ReadPage(pageID, frame.buffer);
+                return frame.buffer;
             }
 
+            // TODO - Fonction statique d'initialisation d'une frame.
+
             // Si le BM est plein, politique de remplacement (LRU)
-            if (frame.getUnpinned() == LRU && frame.getPinCount() < 1) {
-                // TODO - Ecrire si dirty vaut 1
+            if (frame.getUnpinned() == LRU && frame.getPinCount() == 0) {
+                // Ecrire la page si dirty vaut 1
+                if (frame.getDirty() == 1) {
+                    DiskManager.getInstance().WritePage(pageID, frame.buffer);
+                }
                 frame.setPinCount(1);
                 frame.setDirty(0);
                 frame.setUnpinned(LocalDateTime.now().plusYears(1));
                 frame.setPageID(pageID);
-
-                break;
+                frame.buffer = new byte[DBParams.pageSize];
+                DiskManager.getInstance().ReadPage(pageID, frame.buffer);
+                return frame.buffer;
             }
         }
 
-        // remplie le byteBuffer avec le contenu de la page
-        DiskManager.getInstance().ReadPage(pageID, byteBuffer);
+        // Retourne null en cas d'erreur
+        return null;
 
-        // Aide visuelle
-        System.out.println("LRU : " + LRU);
-        for (Frame frame : this.frames) {
-            System.out.println("FRAME");
-            System.out.println("PageID : " + frame.getPageID());
-            System.out.println("Pin Count : " + frame.getPinCount());
-            System.out.println("Dirty : " + frame.getDirty());
-            System.out.println("Unpinned : " + frame.getUnpinned());
-            System.out.println("----------");
-        }
-
-        return byteBuffer;
     }
 
     /**
@@ -121,6 +113,17 @@ public class BufferManager {
     public void FlushAll() {
         // TODO - Ecrire toutes les pages dont le flag dirty vaut 1
         // TODO - Remise à zéro de tous les flags/informations et contenus des buffers
+    }
+
+    public void DisplayFrames() {
+        for (Frame frame : this.frames) {
+            System.out.println("----------");
+            System.out.println("PageID : " + frame.getPageID());
+            System.out.println("Pin Count : " + frame.getPinCount());
+            System.out.println("Dirty : " + frame.getDirty());
+            System.out.println("Unpinned : " + frame.getUnpinned());
+            System.out.println("----------");
+        }
     }
 
 }
