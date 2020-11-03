@@ -25,6 +25,12 @@ public class BufferManager {
         return INSTANCE;
     }
 
+    /**
+     * Renvoie un byteBuffer qui correspond aux données de la page passée en paramètres.
+     * Cette fonction s'occupe d'attribuer aux frames du buffer des pages et de les remplacer selon LRU.
+     *
+     * @param pageID - PageID qui représente la page à renvoyer sous forme de buffer
+     */
     public byte[] GetPage(PageID pageID) {
         /*
         Cette méthode doit répondre à une demande de page venant des couches plus hautes, et donc
@@ -59,8 +65,6 @@ public class BufferManager {
                 DiskManager.getInstance().ReadPage(pageID, frame.buffer);
                 return frame.buffer;
             }
-
-            // TODO - Fonction statique d'initialisation d'une frame.
 
             // Si le BM est plein, politique de remplacement (LRU)
             if (frame.getUnpinned() == LRU && frame.getPinCount() == 0) {
@@ -107,6 +111,9 @@ public class BufferManager {
 
     }
 
+    /**
+     * Libère toutes les frames du Buffer en écrivant sur le disque les pages modifiées.
+     */
     public void FlushAll() {
         for (Frame frame : this.frames) {
             // Ecrire toutes les pages dont le flag dirty vaut 1
@@ -118,6 +125,9 @@ public class BufferManager {
         }
     }
 
+    /**
+     * Permet d'afficher le contenu de chaque frame dans la console.
+     */
     public void DisplayFrames() {
         for (Frame frame : this.frames) {
             System.out.println("----------");
