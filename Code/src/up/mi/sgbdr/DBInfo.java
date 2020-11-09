@@ -1,5 +1,9 @@
 package up.mi.sgbdr;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,8 +29,13 @@ public class DBInfo {
 
     }
 
-    public void Finish() {
-
+    public void Finish() throws IOException {
+        FileOutputStream file = new FileOutputStream("DB/Catalog.def");
+        ObjectOutputStream outputStream = new ObjectOutputStream(file);
+        outputStream.write(count);
+//        for (RelationInfo relationInfo : list) {
+//            outputStream.writeChars(relationInfo.getName());
+//        }
     }
 
     public void displayList() {

@@ -1,5 +1,6 @@
 package up.mi.sgbdr;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class DBManager {
@@ -22,7 +23,7 @@ public class DBManager {
         DBInfo.getInstance().Init();
     }
 
-    public void Finish() {
+    public void Finish() throws IOException {
         DBInfo.getInstance().Finish();
         BufferManager.getInstance().FlushAll();
     }
