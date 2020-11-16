@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DBInfo {
-    int count;
+    public int count;
     public ArrayList<RelationInfo> list = new ArrayList<>();
 
     private static DBInfo INSTANCE;
@@ -30,12 +30,13 @@ public class DBInfo {
     }
 
     public void Finish() throws IOException {
-        FileOutputStream file = new FileOutputStream("DB/Catalog.def");
+        /*FileOutputStream file = new FileOutputStream("DB/Catalog.def");
         ObjectOutputStream outputStream = new ObjectOutputStream(file);
-        outputStream.write(count);
-//        for (RelationInfo relationInfo : list) {
-//            outputStream.writeChars(relationInfo.getName());
-//        }
+        outputStream.writeInt(count);
+        for (RelationInfo relationInfo : list) {
+            outputStream.writeObject(relationInfo);
+        }
+        outputStream.close();*/
     }
 
     public void displayList() {

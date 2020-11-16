@@ -1,7 +1,9 @@
 package up.mi.sgbdr;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RelationInfo {
+public class RelationInfo implements Serializable {
+
     private String name;
     private int cols;
     private ArrayList<String> colNames;
@@ -39,11 +41,19 @@ public class RelationInfo {
         this.colTypes = colTypes;
     }
 
-    RelationInfo (String name, int cols, ArrayList<String> colNames, ArrayList<String> colTypes) {
+    public RelationInfo (String name, int cols, ArrayList<String> colNames, ArrayList<String> colTypes) {
         this.name = name;
         this. cols = cols;
         this.colNames = colNames;
         this.colTypes = colTypes;
+    }
+
+    @Override
+    public String toString() {
+        return "RelationInfo{" +
+                "name='" + name + '\'' +
+                ", cols=" + cols +
+                '}';
     }
 
     /*public static void ColInfo(){

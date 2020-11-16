@@ -39,7 +39,7 @@ public class DBManager {
         String[] words = arg.split(" ");
 
         switch (words[0]) {
-            case "CREATEREL" -> {
+            case "CREATEREL": {
                 String relName = words[1];
                 int colNumber = words.length - 2;
                 ArrayList<String> colNames = new ArrayList<>();
@@ -55,13 +55,14 @@ public class DBManager {
 
             }
 
-            case "DBPARAMS" ->  {
+            case "DBPARAMS": {
                 System.out.println("Path: " + DBParams.DBPath);
                 System.out.println("Page Size: " + DBParams.pageSize);
                 System.out.println("Rel count: " + DBInfo.getInstance().count);
             }
 
-            default -> System.out.println("Mauvaise commande");
+            default:
+                System.out.println("Mauvaise commande");
         }
     }
 

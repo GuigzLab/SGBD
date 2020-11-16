@@ -14,7 +14,6 @@ public class Main {
 
         DBManager.getInstance().Init();
 
-        ArrayList<String> personnes = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
