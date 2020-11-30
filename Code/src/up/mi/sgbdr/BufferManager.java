@@ -69,7 +69,9 @@ public class BufferManager {
                 DiskManager.getInstance().ReadPage(pageID, frame.buffer);
                 return frame.buffer;
             }
+        }
 
+        for (Frame frame : this.frames){
             // Si le BM est plein, politique de remplacement (LRU)
             if (frame.getUnpinned() == LRU && frame.getPinCount() == 0) {
                 // Ecrire la page si dirty vaut 1

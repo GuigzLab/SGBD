@@ -49,7 +49,7 @@ public class HeapFile {
         // On actualise le nombre de DataPages
         byteBuffer.putInt(pageID.getPageIdx());
 
-        int slotCount = relationInfo.getSlotCount();
+        int slotCount = this.relationInfo.getSlotCount();
 
         byteBuffer.position(pageID.getPageIdx() * 4);
         byteBuffer.putInt(slotCount);
@@ -79,11 +79,16 @@ public class HeapFile {
         for (int i = 1; i <= nbDataPages; i++) {
             pos = 4 * i;
             if (byteBuffer.getInt(pos) > 0) {
+                BufferManager.getInstance().FreePage(headerPage, false);
                 return new PageID(fileIdx, i);
             }
         }
 
-        return null;
+        BufferManager.getInstance().FreePage(headerPage, false);
+
+        System.out.println("test");
+        return this.addDataPage();
+
     }
 
     public Rid writeRecordToDataPage(Record record, PageID pageID) {
@@ -95,15 +100,21 @@ public class HeapFile {
         int pos;
 
         byte[] dataPageBuffer = BufferManager.getInstance().GetPage(pageID);
-        for (int i = 0; i < relationInfo.getSlotCount(); i++) {
-            if (dataPageBuffer[i*4 + 3] == 0){
-                dataPageBuffer[i*4 + 3] = 1;
-                //TODO - Ecrire le record
-                System.out.println(i);
-                pos = (relationInfo.getSlotCount() * 4) + (i * relationInfo.getRecordSize());
-                System.out.println(pos);
+        for (int i = 0; i < this.relationInfo.getSlotCount(); i++) {
+            if (dataPageBuffer[i * 4 + 3] == 0) {
+                dataPageBuffer[i * 4 + 3] = 1;
+                pos = (this.relationInfo.getSlotCount() * 4) + (i * this.relationInfo.getRecordSize());
                 record.writeToBuffer(dataPageBuffer, pos);
                 BufferManager.getInstance().FreePage(pageID, true);
+
+
+                PageID headerPage = new PageID(this.relationInfo.getFileIdx(), 0);
+                byte[] headerPageBuffer = BufferManager.getInstance().GetPage(headerPage);
+                ByteBuffer byteBuffer = ByteBuffer.wrap(headerPageBuffer);
+                int count = byteBuffer.getInt(pageID.getPageIdx() * 4);
+                byteBuffer.putInt(pageID.getPageIdx() * 4, count - 1);
+
+                BufferManager.getInstance().FreePage(headerPage, true);
 
                 return new Rid(pageID, i);
             }
@@ -112,9 +123,44 @@ public class HeapFile {
         return null;
     }
 
-    public ArrayList<Record> getRecordsInDataPage (PageID pageID) {
+    public ArrayList<Record> getRecordsInDataPage(PageID pageID) {
+        // Record.readFromBuffer(buffer, pos);
+        ArrayList<Record> records = new ArrayList<>();
+        int pos;
 
-        return null;
+        byte[] dataPageBuffer = BufferManager.getInstance().GetPage(pageID);
+        for (int i = 0; i < this.relationInfo.getSlotCount(); i++) {
+            if (dataPageBuffer[i * 4 + 3] == 1) {
+                pos = (this.relationInfo.getSlotCount() * 4) + (i * this.relationInfo.getRecordSize());
+                Record record = new Record(this.relationInfo);
+                record.readFromBuffer(dataPageBuffer, pos);
+                records.add(record);
+            }
+        }
+        BufferManager.getInstance().FreePage(pageID, false);
+        return records;
+    }
+
+    public Rid InsertRecord(Record record){
+        return this.writeRecordToDataPage(record, this.getFreeDataPageId());
+    }
+
+    public ArrayList<Record> GetAllRecords(){
+        ArrayList<Record> records = new ArrayList<>();
+
+        PageID headerPage = new PageID(this.relationInfo.getFileIdx(), 0);
+        byte[] headerPageBuffer = BufferManager.getInstance().GetPage(headerPage);
+
+        ByteBuffer byteBuffer = ByteBuffer.wrap(headerPageBuffer);
+        byteBuffer.position(0);
+        int nbDataPages = byteBuffer.getInt();
+        BufferManager.getInstance().FreePage(headerPage, false);
+
+        for (int i = 1; i <= nbDataPages; i++) {
+            records.addAll(getRecordsInDataPage(new PageID(this.relationInfo.getFileIdx(), i)));
+        }
+
+        return records;
     }
 
 }

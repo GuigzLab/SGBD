@@ -28,17 +28,23 @@ public class HeapFileTest {
 //        System.out.println("ADDDATAPAGE");
 //        heapFile.addDataPage();
 
-        PageID free = heapFile.getFreeDataPageId();
-
-//        System.out.println(free.getFileIdx() + "," + free.getPageIdx());
-
-        Record record = new Record(rel);
-        record.setValues(new ArrayList<String>(Arrays.asList("3", "acb")));
-        Rid rid = heapFile.writeRecordToDataPage(record, free);
-
         BufferManager.getInstance().FlushAll();
 
+        Record record = new Record(rel);
+        record.setValues(new ArrayList<String>(Arrays.asList("3", "aaa")));
+        Rid rid = heapFile.InsertRecord(record);
+        BufferManager.getInstance().FlushAll();
+//
+        ArrayList<Record> allRecords = heapFile.GetAllRecords();
+//
+        for (Record r : allRecords){
+            for (String v : r.getValues()){
+                System.out.print(v);
+            }
+            System.out.println();
+        }
 
+        BufferManager.getInstance().FlushAll();
 
     }
 }

@@ -25,6 +25,7 @@ public class BufferManagerTest {
 
         System.out.println("GETPAGE 1 --------------");
         byte[] byteBuffer = BM.GetPage(page);
+        BM.FreePage(page, false);
 
         BM.DisplayFrames();
 
