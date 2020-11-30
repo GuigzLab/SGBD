@@ -72,7 +72,7 @@ public class Record {
                     break;
                 }
                 default: {
-                    int length = Integer.parseInt(String.valueOf(this.relationInfo.getColTypes().get(i).charAt(7)));
+                    int length = Integer.parseInt(String.valueOf(this.relationInfo.getColTypes().get(i).charAt(6)));
                     char[] chars = new char[length];
                     for (int j = 0; j < chars.length; j++) {
                         chars[j] = byteBuffer.getChar();
@@ -82,8 +82,6 @@ public class Record {
                 }
             }
         }
-
-
     }
 
     public ArrayList<String> getValues() {
@@ -92,5 +90,9 @@ public class Record {
 
     public void setValues(ArrayList<String> values) {
         this.values = values;
+    }
+
+    public RelationInfo getRelationInfo() {
+        return relationInfo;
     }
 }

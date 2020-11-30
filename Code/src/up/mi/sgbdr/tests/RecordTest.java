@@ -15,9 +15,9 @@ public class RecordTest {
 
         String relName = "REL";
         ArrayList<String> colNames = new ArrayList<>(Arrays.asList("id", "name"));
-        ArrayList<String> colTypes = new ArrayList<>(Arrays.asList("int", "string:3"));
+        ArrayList<String> colTypes = new ArrayList<>(Arrays.asList("int", "string3"));
         int colNumber = colNames.size();
-        RelationInfo rel = new RelationInfo(relName, colNumber, colNames, colTypes);
+        RelationInfo rel = new RelationInfo(relName, colNumber, colNames, colTypes, 1);
 
         ArrayList<String> values = new ArrayList<>(Arrays.asList("3", "abc"));
 

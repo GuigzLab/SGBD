@@ -45,13 +45,11 @@ public class DiskManager {
      * @param fileIdx - Identifiant du fichier
      * @return PageID
      */
-
     public PageID AddPage(int fileIdx) {
 
         //FIXME
         // - byte[] buff to ByteBuffer buff
 
-//        ByteBuffer byteBuffer = ByteBuffer.allocate(DBParams.pageSize);
         byte[] byteBuffer = new byte[DBParams.pageSize];
 
         int pageId = 0;
@@ -61,7 +59,6 @@ public class DiskManager {
 
 
             for (int i = 0; i < DBParams.pageSize; i++) {
-//                file.writeByte(byteBuffer.get(i));
                 file.writeByte(byteBuffer[i]);
             }
 
@@ -83,9 +80,6 @@ public class DiskManager {
      */
 
     public void ReadPage(PageID pageId, byte[] buff) {
-
-        //FIXME
-        // - byte[] buff to ByteBuffer buff
 
         String path = DBParams.DBPath + "Data_" + pageId.getFileIdx() + ".rf";
         RandomAccessFile file;
@@ -121,9 +115,6 @@ public class DiskManager {
      */
 
     public void WritePage(PageID pageId, byte[] buff) {
-
-        //FIXME
-        // - byte[] buff to ByteBuffer buff
 
         //TODO Exception si le buffer est plus gros que la taille d'une page
 

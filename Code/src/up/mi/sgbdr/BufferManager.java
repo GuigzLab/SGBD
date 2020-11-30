@@ -8,6 +8,10 @@ public class BufferManager {
 
     private ArrayList<Frame> frames = new ArrayList<>();
 
+    public ArrayList<Frame> getFrames() {
+        return frames;
+    }
+
     private static BufferManager INSTANCE;
     private String info = "Buffer Manager";
 

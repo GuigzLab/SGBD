@@ -1,14 +1,14 @@
 package up.mi.sgbdr;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DBInfo {
-    public int count;
+public class DBInfo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    public int count = 0;
     public ArrayList<RelationInfo> list = new ArrayList<>();
 
     private static DBInfo INSTANCE;
@@ -25,18 +25,24 @@ public class DBInfo {
         return INSTANCE;
     }
 
-    public void Init() {
+    public void Init() throws IOException, ClassNotFoundException {
+        FileInputStream file = new FileInputStream("DB/Catalog.def");
+        ObjectInputStream inputStream = new ObjectInputStream(file);
 
+        INSTANCE = (DBInfo) inputStream.readObject();
+
+        inputStream.close();
+        file.close();
     }
 
     public void Finish() throws IOException {
-        /*FileOutputStream file = new FileOutputStream("DB/Catalog.def");
+        FileOutputStream file = new FileOutputStream("DB/Catalog.def");
         ObjectOutputStream outputStream = new ObjectOutputStream(file);
-        outputStream.writeInt(count);
-        for (RelationInfo relationInfo : list) {
-            outputStream.writeObject(relationInfo);
-        }
-        outputStream.close();*/
+
+        outputStream.writeObject(INSTANCE);
+
+        outputStream.close();
+        file.close();
     }
 
     public void displayList() {

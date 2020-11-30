@@ -19,7 +19,7 @@ public class DBManager {
         return INSTANCE;
     }
 
-    public void Init() {
+    public void Init() throws IOException, ClassNotFoundException {
         DBInfo.getInstance().Init();
     }
 
@@ -29,7 +29,7 @@ public class DBManager {
     }
 
     public void CreateRelation(String name, int number, ArrayList<String> colNames, ArrayList<String> colTypes) {
-        RelationInfo newRel = new RelationInfo(name, number, colNames, colTypes);
+        RelationInfo newRel = new RelationInfo(name, number, colNames, colTypes, DBInfo.getInstance().count);
 
         DBInfo.getInstance().list.add(newRel);
     }
@@ -52,17 +52,19 @@ public class DBManager {
                 CreateRelation(relName, colNumber, colNames, colTypes);
                 DBInfo.getInstance().count++;
                 DBInfo.getInstance().displayList();
-
+                break;
             }
 
             case "DBPARAMS": {
                 System.out.println("Path: " + DBParams.DBPath);
                 System.out.println("Page Size: " + DBParams.pageSize);
                 System.out.println("Rel count: " + DBInfo.getInstance().count);
+                break;
             }
 
             default:
                 System.out.println("Mauvaise commande");
+                break;
         }
     }
 

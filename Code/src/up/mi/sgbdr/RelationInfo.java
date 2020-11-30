@@ -1,13 +1,16 @@
 package up.mi.sgbdr;
-import java.io.Serializable;
+
 import java.util.ArrayList;
 
-public class RelationInfo implements Serializable {
+public class RelationInfo {
 
     private String name;
     private int cols;
     private ArrayList<String> colNames;
     private ArrayList<String> colTypes;
+    private int fileIdx;
+    private int recordSize = 0;
+    private int slotCount = 0;
 
     public String getName() {
         return name;
@@ -41,22 +44,43 @@ public class RelationInfo implements Serializable {
         this.colTypes = colTypes;
     }
 
-    public RelationInfo (String name, int cols, ArrayList<String> colNames, ArrayList<String> colTypes) {
+    public int getRecordSize() {
+        return recordSize;
+    }
+
+    public int getFileIdx() {
+        return fileIdx;
+    }
+
+    public int getSlotCount() {
+        return slotCount;
+    }
+
+    public RelationInfo(String name, int cols, ArrayList<String> colNames, ArrayList<String> colTypes, int fileIdx) {
         this.name = name;
-        this. cols = cols;
+        this.cols = cols;
         this.colNames = colNames;
         this.colTypes = colTypes;
+        this.fileIdx = fileIdx;
+
+        for (String col : colTypes) {
+            switch (col) {
+                case "int":
+                case "float": {
+                    this.recordSize += 4;
+                    break;
+                }
+                default: {
+                    int length = Integer.parseInt(String.valueOf(col.charAt(6)));
+                    this.recordSize += length * 2;
+                }
+            }
+        }
+
+        this.slotCount = DBParams.pageSize / this.recordSize;
+        if (DBParams.pageSize - this.slotCount - (this.slotCount * this.recordSize) < 0) {
+            this.slotCount -= 1;
+        }
     }
 
-    @Override
-    public String toString() {
-        return "RelationInfo{" +
-                "name='" + name + '\'' +
-                ", cols=" + cols +
-                '}';
-    }
-
-    /*public static void ColInfo(){
-
-    }*/
 }

@@ -1,11 +1,10 @@
 package up.mi.sgbdr;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         //Initialiser les variables de DBParams
         DBParams.DBPath = "DB/";
