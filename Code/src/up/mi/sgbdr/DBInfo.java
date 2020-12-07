@@ -25,13 +25,13 @@ public class DBInfo implements Serializable {
     }
 
     public void Init() throws IOException, ClassNotFoundException {
-        /*FileInputStream file = new FileInputStream("DB/Catalog.def");
+        FileInputStream file = new FileInputStream("DB/Catalog.def");
         ObjectInputStream inputStream = new ObjectInputStream(file);
 
         INSTANCE = (DBInfo) inputStream.readObject();
 
         inputStream.close();
-        file.close();*/
+        file.close();
     }
 
     public void Finish() throws IOException {
