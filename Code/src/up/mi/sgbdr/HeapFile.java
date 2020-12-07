@@ -10,6 +10,10 @@ public class HeapFile {
         this.relationInfo = relationInfo;
     }
 
+    public RelationInfo getRelationInfo() {
+        return relationInfo;
+    }
+
     public void createNewOnDisk() {
         int fileIdx = this.relationInfo.getFileIdx();
         DiskManager.getInstance().CreateFile(fileIdx);

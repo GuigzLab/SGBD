@@ -2,7 +2,6 @@ package up.mi.sgbdr;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class DBInfo implements Serializable {
 
@@ -12,7 +11,7 @@ public class DBInfo implements Serializable {
     public ArrayList<RelationInfo> list = new ArrayList<>();
 
     private static DBInfo INSTANCE;
-    private String info = "Initial info class";
+    private final String info = "DB Info";
 
     private DBInfo() {
     }
@@ -26,23 +25,30 @@ public class DBInfo implements Serializable {
     }
 
     public void Init() throws IOException, ClassNotFoundException {
-        FileInputStream file = new FileInputStream("DB/Catalog.def");
+        /*FileInputStream file = new FileInputStream("DB/Catalog.def");
         ObjectInputStream inputStream = new ObjectInputStream(file);
 
         INSTANCE = (DBInfo) inputStream.readObject();
 
         inputStream.close();
-        file.close();
+        file.close();*/
     }
 
     public void Finish() throws IOException {
-        FileOutputStream file = new FileOutputStream("DB/Catalog.def");
-        ObjectOutputStream outputStream = new ObjectOutputStream(file);
+        if (this.count > 0) {
+            FileOutputStream file = new FileOutputStream("DB/Catalog.def");
+            ObjectOutputStream outputStream = new ObjectOutputStream(file);
 
-        outputStream.writeObject(INSTANCE);
+            outputStream.writeObject(INSTANCE);
 
-        outputStream.close();
-        file.close();
+            outputStream.close();
+            file.close();
+        }
+    }
+
+    public void Reset() {
+        this.count = 0;
+        this.list.clear();
     }
 
     public void displayList() {

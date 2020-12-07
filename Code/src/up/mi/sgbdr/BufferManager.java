@@ -131,6 +131,12 @@ public class BufferManager {
         }
     }
 
+    public void Reset(){
+        for (Frame frame : this.frames) {
+            frame.resetFrame();
+        }
+    }
+
     /**
      * Permet d'afficher le contenu de chaque frame dans la console.
      */
