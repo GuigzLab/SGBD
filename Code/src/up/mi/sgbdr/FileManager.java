@@ -45,8 +45,9 @@ public class FileManager {
             on apelle HeapFile.InsertRecord (codé dans le tp5)
 dans chaque methode on fait appel à ce qu'on a fait dans le tp5"
         * */
+
         for (HeapFile heapFile: this.heapFiles){
-            if (heapFile.getRelationInfo().getName() == relName){
+            if (heapFile.getRelationInfo().getName().equals(relName)){
                 return heapFile.InsertRecord(record);
             }
         }
@@ -56,8 +57,18 @@ dans chaque methode on fait appel à ce qu'on a fait dans le tp5"
     public ArrayList<Record> SelectAllFromRelation(String relName){
 
         for (HeapFile heapFile: this.heapFiles){
-            if (heapFile.getRelationInfo().getName() == relName){
+            if (heapFile.getRelationInfo().getName().equals(relName)){
                 return heapFile.GetAllRecords();
+            }
+        }
+
+        return null;
+    }
+
+    public RelationInfo getRelationInfoFromRelName(String relName){
+        for (HeapFile heapFile: this.heapFiles){
+            if (heapFile.getRelationInfo().getName().equals(relName)){
+                return heapFile.getRelationInfo();
             }
         }
 

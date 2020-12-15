@@ -24,9 +24,9 @@ public class HeapFile {
 
         ByteBuffer byteBuffer = ByteBuffer.wrap(buff);
         byteBuffer.position(0);
-        for (int i = 0; i < DBParams.pageSize / 4; i++) {
-            byteBuffer.putInt(0);
-        }
+//        for (int i = 0; i < DBParams.pageSize / 4; i++) {
+//            byteBuffer.putInt(0);
+//        }
         byteBuffer.flip();
         byteBuffer.get(buff, 0, byteBuffer.remaining());
 
@@ -90,7 +90,6 @@ public class HeapFile {
 
         BufferManager.getInstance().FreePage(headerPage, false);
 
-        System.out.println("test");
         return this.addDataPage();
 
     }

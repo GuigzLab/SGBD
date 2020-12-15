@@ -54,10 +54,11 @@ public class BufferManager {
         LocalDateTime LRU = copy.get(0).getUnpinned();
 
         // On parcourt toutes les frames
+
         for (Frame frame : this.frames) {
 
             // Si le BM contient déjà la page, récupérer le buffer courant
-            if (frame.getPageID() == pageID) {
+            if (frame.getPageID() != null && frame.getPageID().getFileIdx() == pageID.getFileIdx() && frame.getPageID().getPageIdx() == pageID.getPageIdx()) {
                 frame.incrementPinCount();
                 return frame.buffer;
             }
@@ -71,12 +72,12 @@ public class BufferManager {
             }
         }
 
-        for (Frame frame : this.frames){
+        for (Frame frame : this.frames) {
             // Si le BM est plein, politique de remplacement (LRU)
             if (frame.getUnpinned() == LRU && frame.getPinCount() == 0) {
                 // Ecrire la page si dirty vaut 1
                 if (frame.isDirty()) {
-                    DiskManager.getInstance().WritePage(pageID, frame.buffer);
+                    DiskManager.getInstance().WritePage(frame.getPageID(), frame.buffer);
                 }
                 // Réinitialise la frame
                 frame.resetFrame();
@@ -103,11 +104,11 @@ public class BufferManager {
 
         // On parcourt toutes les frames
         for (Frame frame : this.frames) {
-            if (frame.getPageID() == pageID) {
+            if (frame.getPageID() != null && frame.getPageID().getFileIdx() == pageID.getFileIdx() && frame.getPageID().getPageIdx() == pageID.getPageIdx()) {
                 // Décrémente le pinCount de la case dans laquelle se trouve pageID
                 frame.setPinCount(frame.getPinCount() - 1);
                 // Actualiser le unpinned si pinCount = 0
-                if (frame.getPinCount() == 0){
+                if (frame.getPinCount() == 0) {
                     frame.setUnpinned(LocalDateTime.now());
                 }
                 frame.setDirty(dirty);
@@ -123,7 +124,7 @@ public class BufferManager {
     public void FlushAll() {
         for (Frame frame : this.frames) {
             // Ecrire toutes les pages dont le flag dirty vaut 1
-            if (frame.isDirty()){
+            if (frame.isDirty()) {
                 DiskManager.getInstance().WritePage(frame.getPageID(), frame.buffer);
             }
             // Remise à zéro de tous les flags/informations et contenus des buffers
@@ -131,7 +132,7 @@ public class BufferManager {
         }
     }
 
-    public void Reset(){
+    public void Reset() {
         for (Frame frame : this.frames) {
             frame.resetFrame();
         }

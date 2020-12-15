@@ -2,14 +2,14 @@ package up.mi.sgbdr;
 
 import java.time.LocalDateTime;
 
-public class Frame implements Comparable<Frame>{
+public class Frame implements Comparable<Frame> {
     private PageID pageID;
     public byte[] buffer;
     private int pinCount;
     private boolean dirty;
     private LocalDateTime unpinned;
 
-    public Frame () {
+    public Frame() {
         this.resetFrame();
     }
 
@@ -26,7 +26,8 @@ public class Frame implements Comparable<Frame>{
     }
 
     public void setDirty(boolean dirty) {
-        this.dirty = dirty;
+        if (!this.dirty)
+            this.dirty = dirty;
     }
 
     public int getPinCount() {
@@ -50,7 +51,7 @@ public class Frame implements Comparable<Frame>{
         return getUnpinned().compareTo(o.getUnpinned());
     }
 
-    public void resetFrame () {
+    public void resetFrame() {
         this.pageID = null;
         this.buffer = new byte[DBParams.pageSize];
         this.pinCount = 0;

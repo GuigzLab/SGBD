@@ -1,8 +1,9 @@
 package up.mi.sgbdr;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RelationInfo {
+public class RelationInfo implements Serializable {
 
     private String name;
     private int cols;
@@ -78,9 +79,12 @@ public class RelationInfo {
         }
 
         this.slotCount = DBParams.pageSize / this.recordSize;
-        if (DBParams.pageSize - this.slotCount - (this.slotCount * this.recordSize) < 0) {
+        while (DBParams.pageSize - (this.slotCount * 4) - (this.slotCount * this.recordSize) < 0) {
             this.slotCount -= 1;
         }
+//        if (DBParams.pageSize - this.slotCount - (this.slotCount * this.recordSize) < 0) {
+//            this.slotCount -= 1;
+//        }
     }
 
 }

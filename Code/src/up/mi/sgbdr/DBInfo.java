@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class DBInfo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2906642554793891381L;
 
     public int count = 0;
     public ArrayList<RelationInfo> list = new ArrayList<>();
@@ -35,15 +35,13 @@ public class DBInfo implements Serializable {
     }
 
     public void Finish() throws IOException {
-        if (this.count > 0) {
-            FileOutputStream file = new FileOutputStream("DB/Catalog.def");
-            ObjectOutputStream outputStream = new ObjectOutputStream(file);
+        FileOutputStream file = new FileOutputStream("DB/Catalog.def");
+        ObjectOutputStream outputStream = new ObjectOutputStream(file);
 
-            outputStream.writeObject(INSTANCE);
+        outputStream.writeObject(DBInfo.INSTANCE);
 
-            outputStream.close();
-            file.close();
-        }
+        outputStream.close();
+        file.close();
     }
 
     public void Reset() {

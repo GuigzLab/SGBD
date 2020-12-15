@@ -16,7 +16,7 @@ public class HeapFileTest {
         ArrayList<String> colNames = new ArrayList<>(Arrays.asList("id", "name"));
         ArrayList<String> colTypes = new ArrayList<>(Arrays.asList("int", "string3"));
         int colNumber = colNames.size();
-        RelationInfo rel = new RelationInfo(relName, colNumber, colNames, colTypes, 0);
+        RelationInfo rel = new RelationInfo(relName, colNumber, colNames, colTypes, 5);
 
         HeapFile heapFile = new HeapFile(rel);
 
@@ -26,23 +26,23 @@ public class HeapFileTest {
 //        heapFile.createNewOnDisk();
 
 //        System.out.println("ADDDATAPAGE");
-//        heapFile.addDataPage();
+        heapFile.addDataPage();
 
-        BufferManager.getInstance().FlushAll();
-
-        Record record = new Record(rel);
-        record.setValues(new ArrayList<String>(Arrays.asList("3", "aaa")));
-        Rid rid = heapFile.InsertRecord(record);
-        BufferManager.getInstance().FlushAll();
+//        BufferManager.getInstance().FlushAll();
 //
-        ArrayList<Record> allRecords = heapFile.GetAllRecords();
-//
-        for (Record r : allRecords){
-            for (String v : r.getValues()){
-                System.out.print(v);
-            }
-            System.out.println();
-        }
+//        Record record = new Record(rel);
+//        record.setValues(new ArrayList<String>(Arrays.asList("3", "aaa")));
+//        Rid rid = heapFile.InsertRecord(record);
+//        BufferManager.getInstance().FlushAll();
+////
+//        ArrayList<Record> allRecords = heapFile.GetAllRecords();
+////
+//        for (Record r : allRecords){
+//            for (String v : r.getValues()){
+//                System.out.print(v);
+//            }
+//            System.out.println();
+//        }
 
         BufferManager.getInstance().FlushAll();
 
